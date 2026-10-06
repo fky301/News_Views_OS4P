@@ -27,11 +27,10 @@
 
 % \noindent{\sffamily\small NEWS \& VIEWS \quad GRAVITATIONAL-WAVE ASTRONOMY\par}
 % \vspace{5pt}
-\noindent{\LARGE\bfseries Learning a shortcut to gravitational-wave inference\par}
+\noindent{\LARGE\bfseries Learning as a shortcut to gravitational-wave inference\par}
 \vspace{8pt}
 \noindent\textbf{A neural approximation to an expensive likelihood could make
-  gravitational wave analysis faster and more adaptable. Its usefulness depends
-  on preserving the uncertainties that turn a detected signal into a physical measurement.}
+  gravitational wave analysis faster and more adaptable.}
 \vspace{8pt}
 
 % P1 | 引入与点题 | 扩写后约80词
@@ -43,7 +42,7 @@
 % signals is becoming computationally demanding. Negri and Samajdar propose
 % learning a fast approximation to a costly step in the analysis.\cite{negri2025}
 
-Gravitational waves (GW) are ripples in spacetime intrigued by movement of massive objects such as black holes or neutron stars. Decade after the first observation of GW plenties of signals are thereafter recorded, meanwhile more complicated theoretical models have been put forward to investigate more phenomona even the beyond general relativity ones. All these work relies on proper parameter estimation (PE) which is highly demanding in computational resources. Negri and Samajdar\cite{negri2025} develop an algorithm using neural likelihood to significantly accelerate PE and for the first time apply such algorithm on a real GW signal.
+Gravitational waves (GW) are ripples in spacetime intrigued by movement of massive objects such as black holes or neutron stars. Decade after the first observation of GW plenties of signals are thereafter recorded, meanwhile more complicated theoretical models have been put forward to investigate more phenomona even the beyond general relativity ones. All these work relies on proper parameter estimation (PE) which is both highly demanding in computational resources and poor in reusability when changing any part of PE. Negri and Samajdar\cite{negri2025} develop an algorithm featuring neural likelihood estimation to significantly accelerate PE and for the first time apply such algorithm on a real GW signal.
 
 
 % P2 | 必要的物理背景 | 扩写后约70词
@@ -89,7 +88,7 @@ requirements or validation strategies leave room for complementary methods. Some
 % “红点集中于后验相关区域”指输入点的空间分布；训练目标仍是似然值。
 % 一句话说明按事件训练、小型网络、无需专用加速硬件的实用意义。
 % 神经网络似然代理不是首次提出；Graff2012是天文/宇宙学领域的相关前身。
-The core concept of Negri and Samajdar\cite{negri2025}'s PE algorithm is based on neural network (NN)'s ability of approximating any mapping. An NN is trained as a mapping $[\vec{\theta_{i}}]\rightarrow[\mathcal{L}(\vec{{\theta_{i}}})]$ that resembles the true likelihood function based on selected training points of true likelihood evaluation(Fig.\ref{fig:nle}a). Once trained, NN estimates likelihood values through a short sequence of weighted sums and simple nonlinear operations, bypassing the expensive true likelihood evaluation. In total NN's cost of training can be paid off by cheap evaluation of likelihood via itself during extensive sampling needed in PE, provided that the NN approximation remains sufficiently accurate.
+The core concept of Negri and Samajdar\cite{negri2025}'s PE algorithm is incorporating neural likelihood estimator in conventional Bayesian inference algorithm. The idea is based on neural network (NN)'s ability of approximating any mapping. An NN is trained as a mapping $[\vec{\theta_{i}}]\rightarrow[\mathcal{L}(\vec{{\theta_{i}}})]$ that resembles the true likelihood function based on selected training points of true likelihood evaluation(Fig.\ref{fig:nle}a). Once trained, NN estimates likelihood values through a short sequence of weighted sums and simple nonlinear operations, bypassing the expensive true likelihood evaluation. In total NN's cost of training can be paid off by cheap evaluation of likelihood via itself during extensive sampling needed in PE, provided that the NN approximation remains sufficiently accurate.
 
 
 
@@ -124,44 +123,61 @@ Afterwards, NN could fit in Bayesian PE as replacement of true likelihood functi
 % 图a的NN(theta)表示exp(f(theta))；示例网络在log-likelihood上训练。
 % 红点参与了拟合，因此标为training points而非独立test set。
 
-% P7 | 模拟验证 | 扩写后约90词
+% P7.1 | 模拟验证 | 扩写后约90词
 % 用频率解释可信区间覆盖率，例如标称90%的区间应在适当重复实验中表现出相应覆盖。
 % 可选数字：99个模拟系统，总体P-P检验p约0.216；98/99在最多六轮内达到设定诊断阈值。
 % 不用“所有参数均无偏”或“必然收敛到真实后验”；偏振角单项p约0.023尚待检查。
 % 如篇幅不足，保留总体校准和迭代成功率，将异常简短放入P9。
-Simulated signals test whether the method preserves meaningful uncertainty
-estimates. The reported checks broadly support its calibration within the
-tested regime, while also identifying features that warrant closer investigation.
+% Simulated signals test whether the method preserves meaningful uncertainty
+% estimates. The reported checks broadly support its calibration within the
+% tested regime, while also identifying features that warrant closer investigation.
 
-% P8 | 真实事件结果、速度与灵活性 | 扩写后约90词
+% P7.2 | 真实事件结果、速度与灵活性 | 扩写后约90词
 % 聚焦GW150914同一IMRPhenomD波形下：pocomc原始似然656分钟，FLEX+pocomc40分钟。
 % 这约为16倍总CPU时间加速；原始评估次数则从1.3e7降至1.8e5，约72倍。
 % 不需要把两组数字都塞进成稿。选时间为主，避免模糊的“百倍更快”。
 % 一句话说明不同波形及后续采样器上的演示；不能声称任何模型都已被验证。
-For GW150914, FLEX reproduces the main parameter constraints at substantially
-lower computational cost. Tests with several waveform models, together with
-reuse of the trained likelihood in another sampler, illustrate its practical flexibility.
+% For GW150914, FLEX reproduces the main parameter constraints at substantially
+% lower computational cost. Tests with several waveform models, together with
+% reuse of the trained likelihood in another sampler, illustrate its practical flexibility.
 
-% P9 | evidence与局限 | 扩写后约110词
+% P7 | NLE在模拟信号与真实信号上的表现
+
+Negri and Samajdar\cite{negri2025} first test their method on 99 simulated binary black hole signals. They check whether the inferred uncertainty ranges of parameters contained these known parameter values at the expected rates: a range assigned 90$\%$ probability should contain the true value in roughly 90$\%$ of the simulations. The overall agreement among all parameters supports the reliability of uncertainty estimates. They then analyze GW150914, a real signal from a black hole merger. Using the same waveform model, the neural likelihood recovers parameter distributions consistent with a conventional analysis while reducing the reported total CPU time, including training, from almost eleven hours to forty minutes. Analyses using four different waveform models also yield highly consistent source properties. These results demonstrate substantial computational savings within the range of signals tested.
+
+% P8 | evidence与局限 | 扩写后约110词
 % 解释似然代理还能用于估计evidence，但后验一致不自动保证evidence准确。
 % 原文Table3中同模型log Z为286.1与285.2，差约0.9；可定性写仍有偏差需验证。
 % 再用共同主线组织局限：重要区域是否充分覆盖。多峰、高SNR、更高维会增加困难。
 % 当前是高质量双黑洞、对齐自旋并经边缘化的九维示范；更一般的进动/高阶模/校准尚需验证。
 % 不罗列全部技术参数，也不要将“能更换模型后重新训练”写成“同一网络适用任何模型”。
-The likelihood surrogate also permits evidence calculations for comparing
-hypotheses, but agreement between posteriors does not by itself establish
-evidence accuracy. Multimodal distributions and more demanding signals remain
-important tests of the approach.
+% The likelihood surrogate also permits evidence calculations for comparing
+% hypotheses, but agreement between posteriors does not by itself establish
+% evidence accuracy. Multimodal distributions and more demanding signals remain
+% important tests of the approach.
 
-% P10 | 收束与前景 | 扩写后约90词
+Neural likelihood estimator is successful in approximating posterior in simulations and GW150914, it features in being adaptable to various types of likelihood and keeping evidences like conventional Bayesian PE. Nevertheless it comes with limitations in many aspects. First is that the validation is implemented under simplified case of 9-parameter gravitational wave source. For example binaries whose spinning black holes carry non-parallel orbital and spin momentum would be more demanding in parameter dimensionality. Louder signals also weakens samplers' performance. Even the method in preparing training set is left for refinement in better approximating posterior.
+
+% P9 | 收束与前景 | 扩写后约90词
 % 回扣开头：降低成本可让研究者更充分地比较波形、噪声与物理假设。
 % 可提作者提出的迁移学习，但标明是未来方向，不是已实现的跨事件复用。
 % 仿照Spitz结尾，从具体工具提升到更广的科学收益，并留下需要验证的问题。
 % 例如：更复杂、更精确的观测条件下，这种效率与可靠性的平衡能否维持？
-Cheaper inference could make repeated physical tests more accessible as
-gravitational-wave observations become richer. The next challenge is to retain
-this efficiency while demonstrating reliable uncertainties across a wider range
-of sources and analysis choices.
+% Cheaper inference could make repeated physical tests more accessible as
+% gravitational-wave observations become richer. The next challenge is to retain
+% this efficiency while demonstrating reliable uncertainties across a wider range
+% of sources and analysis choices.
+
+With further validation, cheaper inference by virtue of neural network could accelerate the examination of same events using a wider range of waveform models and physical assumptions on the fly. Such comparisons matter when researchers investigate how black hole binaries form or search for departures from general relativity. Agreement across analyses would strengthen confidence in these conclusions; disagreements could expose limitations in the models or even clues interpreted as new physics. Neural likelihood estimation could therefore help turn growing collections of signals into more thoroughly tested accounts of the systems that produced them.
+
+\vspace{15pt}
+\noindent{\large\bfseries AI Usage Statement}
+
+AI tools are used in:
+\begin{enumerate}
+  \item Grammar and spelling check
+  \item Illustration of Fig.\ref{fig:nle}
+\end{enumerate}
 
 \begin{thebibliography}{9}
   \small
